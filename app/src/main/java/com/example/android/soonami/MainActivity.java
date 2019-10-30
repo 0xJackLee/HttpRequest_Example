@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 jsonResponse = makeHttpRequest(url);
             } catch (IOException e) {
                 // TODO Handle the IOException
+                Log.e(LOG_TAG, "Problem making the HTTP request.", e);
             }
 
             // Extract relevant fields from the JSON response and create an {@link Event} object
@@ -167,8 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 urlConnection.setReadTimeout(10000 /* milliseconds */);
                 urlConnection.setConnectTimeout(15000 /* milliseconds */);
                 urlConnection.connect();
-                inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
 
 
                 // Using urlConnection.getResponseCode() to check the code
@@ -177,11 +176,14 @@ public class MainActivity extends AppCompatActivity {
                 if (urlConnection.getResponseCode() == 200) {
                     inputStream = urlConnection.getInputStream();
                     jsonResponse = readFromStream(inputStream);
+                } else {
+                    Log.e(LOG_TAG, "Error response code : " + urlConnection.getResponseCode());
                 }
 
 
             } catch (IOException e) {
                 // TODO: Handle the exception
+                Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
 
             } finally {
                 if (urlConnection != null) {
